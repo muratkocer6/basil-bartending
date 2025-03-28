@@ -19,6 +19,7 @@ HEAD
     stage('Deploy') {
       steps {
         echo 'Deploying app...'
+      HEAD
       }
     }
   }
@@ -26,6 +27,7 @@ HEAD
   agent any
     da52db3 (Update Jenkinsfile)
 
+    9818da0 (Fix Jenkinsfile merge conflict)
   environment {
     IMAGE_NAME = "basil-backend"
     ECR_REPO = "182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend"
@@ -56,6 +58,10 @@ HEAD
       steps {
         sh 'docker tag $IMAGE_NAME $ECR_REPO'
         sh 'docker push $ECR_REPO'
+      HEAD
+
+        da52db34b40cd10f095a91dfdf5187f4b2dd1727
+        9818da0 (Fix Jenkinsfile merge conflict)
       }
     }
   }
