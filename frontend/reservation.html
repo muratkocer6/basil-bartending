@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservation | Basil Bartending</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <nav class="bg-white shadow fixed top-0 w-full z-10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-yellow-600">Basil Bartending</h1>
+      <ul class="flex space-x-6">
+        <li><a href="index.html" class="hover:text-yellow-600">Home</a></li>
+        <li><a href="about.html" class="hover:text-yellow-600">About</a></li>
+        <li><a href="services.html" class="hover:text-yellow-600">Services</a></li>
+        <li><a href="gallery.html" class="hover:text-yellow-600">Gallery</a></li>
+        <li><a href="faq.html" class="hover:text-yellow-600">FAQ</a></li>
+        <li><a href="contact.html" class="hover:text-yellow-600">Contact</a></li>
+        <li><a href="reservation.html" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Book Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Reservation Section -->
+  <section class="pt-24 px-4 max-w-2xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6 text-yellow-600 text-center">Reservation Request</h2>
+  
+    <form id="reservationForm" class="bg-white p-6 rounded shadow space-y-4">
+      <input type="text" name="name" placeholder="Your Name" required class="w-full border px-4 py-2 rounded" />
+      <input type="email" name="email" placeholder="Your Email" required class="w-full border px-4 py-2 rounded" />
+      <input type="date" name="event_date" required class="w-full border px-4 py-2 rounded" />
+      <input type="number" name="guest_count" placeholder="Number of Guests" required class="w-full border px-4 py-2 rounded" />
+      <textarea name="message" placeholder="Event Details" class="w-full border px-4 py-2 rounded" rows="4"></textarea>
+  
+      <button type="submit" class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600">Submit</button>
+  
+      <p id="responseMsg" class="hidden mt-4 text-green-600 font-semibold">Reservation submitted successfully!</p>
+    </form>
+  </section>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+     const form = document.getElementById("reservationForm");
+     const responseMsg = document.getElementById("responseMsg");
+
+     form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+       const formData = new FormData(form);
+       const data = {
+         name: formData.get("name"),
+         email: formData.get("email"),
+         event_date: formData.get("event_date"),
+         guest_count: parseInt(formData.get("guest_count")),
+         message: formData.get("message"),
+       };
+
+       try {
+         const response = await fetch("http://localhost:8000/api/reservation", {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json"
+           },
+           body: JSON.stringify(data)
+         });
+
+         if (response.ok) {
+           responseMsg.classList.remove("hidden");
+           responseMsg.textContent = "✅ Reservation submitted successfully!";
+           form.reset(); // clear form
+         } else {
+           responseMsg.classList.remove("hidden");
+           responseMsg.classList.replace("text-green-600", "text-red-600");
+           responseMsg.textContent = "❌ Submission failed. Please try again.";
+         }
+       } catch (err) {
+         console.error("Error submitting form:", err);
+         responseMsg.classList.remove("hidden");
+         responseMsg.classList.replace("text-green-600", "text-red-600");
+         responseMsg.textContent = "❌ Network error. Is the backend running?";
+       }
+     });
+   });
+  </script>
+  <footer class="bg-gray-900 text-white py-6 mt-20">
+    <div class="container mx-auto text-center text-sm">
+      &copy; 2025 Basil Bartending | All rights reserved
+    </div>
+  </footer>
+</body>
+</html>

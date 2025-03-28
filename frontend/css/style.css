@@ -1,0 +1,8 @@
+/* css/style.css */
+body {
+  scroll-behavior: smooth;
+}
+
+a {
+  transition: color 0.3s ease;
+}
