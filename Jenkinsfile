@@ -6,18 +6,19 @@ HEAD
   stages {
     stage('Build') {
       steps {
-        echo 'Building the app...'
+        echo '🔨 Building the application...'
       }
     }
 
     stage('Test') {
       steps {
-        echo 'Running tests...'
+        echo '🧪 Running tests...'
       }
     }
 
     stage('Deploy') {
       steps {
+       HEAD
         echo 'Deploying app...'
       HEAD
       }
@@ -62,6 +63,10 @@ HEAD
 
         da52db34b40cd10f095a91dfdf5187f4b2dd1727
         9818da0 (Fix Jenkinsfile merge conflict)
+
+        echo '🚀 Deploying to production...'
+        // You can add real deployment steps here later
+        6db4471 (Fix syntax error in Jenkinsfile)
       }
     }
   }
