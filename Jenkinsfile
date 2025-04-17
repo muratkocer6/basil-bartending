@@ -3,24 +3,62 @@ pipeline {
 HEAD
   agent any
 
+  environment {
+    AWS_REGION = 'us-east-1'
+    ECR_REPO = '182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend'
+    IMAGE_TAG = "backend-${env.BUILD_NUMBER}"
+    CLUSTER = 'basil-backend-cluster'
+    SERVICE = 'basil-backend-service'
+  }
+
   stages {
-    stage('Build') {
+    stage('Checkout') {
       steps {
-        echo '🔨 Building the application...'
+        git branch: 'main', url: 'https://github.com/muratkocer6/basilbartending.git'
       }
     }
 
-    stage('Test') {
+    stage('Build Docker Image') {
       steps {
-        echo '🧪 Running tests...'
+        sh 'docker build -t $ECR_REPO:$IMAGE_TAG ./backend'
       }
     }
 
-    stage('Deploy') {
+    stage('Login to ECR') {
       steps {
+       HEAD
        HEAD
         echo 'Deploying app...'
       HEAD
+        sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO'
+      }
+    }
+
+    stage('Push Image to ECR') {
+      steps {
+        sh 'docker push $ECR_REPO:$IMAGE_TAG'
+      }
+    }
+
+    stage('Deploy to ECS') {
+      steps {
+        sh '''
+          aws ecs update-service \
+            --cluster $CLUSTER \
+            --service $SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+        '''
+      }
+    }
+
+    stage('Health Check') {
+      steps {
+        sh '''
+          echo "Checking backend health..."
+          curl --fail https://api.basilbartending.com/api || echo "❌ Backend failed health check"
+        '''
+        bc335cb (Update Jenkinsfile for automated ECS deployment)
       }
     }
   }
@@ -72,3 +110,4 @@ HEAD
   }
  da52db3 (Update Jenkinsfile)
 }
+
