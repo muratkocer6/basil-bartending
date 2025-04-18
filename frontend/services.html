@@ -7,42 +7,53 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <!-- Navbar -->
-  <nav class="bg-white shadow fixed top-0 w-full z-10">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-yellow-600">Basil Bartending</h1>
-      <ul class="flex space-x-6">
-        <li><a href="index.html" class="hover:text-yellow-600">Home</a></li>
-        <li><a href="about.html" class="hover:text-yellow-600">About</a></li>
-        <li><a href="services.html" class="hover:text-yellow-600">Services</a></li>
-        <li><a href="gallery.html" class="hover:text-yellow-600">Gallery</a></li>
-        <li><a href="faq.html" class="hover:text-yellow-600">FAQ</a></li>
-        <li><a href="contact.html" class="hover:text-yellow-600">Contact</a></li>
-        <li><a href="reservation.html" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Book Us</a></li>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <nav class="bg-white shadow-lg fixed top-0 w-full z-10">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold text-yellow-600 tracking-tight">Basil Bartending</h1>
+      <ul class="flex space-x-8 items-center">
+        <li><a href="index.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Home</a></li>
+        <li><a href="about.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">About</a></li>
+        <li><a href="services.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Services</a></li>
+        <li><a href="gallery.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Gallery</a></li>
+        <li Iran's<a href="faq.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">FAQ</a></li>
+        <li><a href="contact.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Contact</a></li>
+        <li><a href="reservation.html" class="bg-yellow-500 text-white px-5 py-2 rounded-full hover:bg-yellow-600 font-semibold transition-all hover:shadow-md">Book Us</a></li>
       </ul>
     </div>
   </nav>
 
   <!-- Services Section -->
-  <section class="pt-24 px-4 text-center">
-    <h2 class="text-4xl font-bold mb-4">Our Services</h2>
-    <p class="text-lg mb-6 max-w-2xl mx-auto">
-      We offer bespoke bartending services tailored for:
-    </p>
-    <ul class="list-disc list-inside max-w-md mx-auto text-left">
-      <li>Private Parties</li>
-      <li>Weddings & Receptions</li>
-      <li>Corporate Events</li>
-      <li>Mixology Workshops</li>
-      <li>Signature Cocktail Menus</li>
-    </ul>
+  <section class="pt-32 pb-20 bg-gradient-to-b from-gray-50 to-gray-100 text-center px-6">
+    <div class="container mx-auto">
+      <h2 class="text-5xl font-bold mb-8 text-gray-900 tracking-tight animate-fade-in">Our Services</h2>
+      <p class="text-xl mb-10 text-gray-600 max-w-2xl mx-auto animate-fade-in">
+        We offer bespoke bartending services tailored for:
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow animate-fade-in">
+          <h3 class="font-semibold text-lg text-gray-900">Private Parties</h3>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow animate-fade-in">
+          <h3 class="font-semibold text-lg text-gray-900">Weddings & Receptions</h3>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow animate-fade-in">
+          <h3 class="font-semibold text-lg text-gray-900">Corporate Events</h3>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow animate-fade-in">
+          <h3 class="font-semibold text-lg text-gray-900">Mixology Workshops</h3>
+        </div>
+        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow animate-fade-in">
+          <h3 class="font-semibold text-lg text-gray-900">Signature Cocktail Menus</h3>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-6 mt-20">
+  <footer class="bg-gray-900 text-white py-8 mt-20">
     <div class="container mx-auto text-center text-sm">
-      &copy; 2025 Basil Bartending | All rights reserved
+      <p>© 2025 Basil Bartending | All rights reserved</p>
+      <p class="mt-2 text-gray-400">Crafting memorable experiences, one cocktail at a time.</p>
     </div>
   </footer>
 </body>

@@ -17,6 +17,9 @@ app.add_middleware(
 @app.get("/")
 def home():
     return {"message": "Welcome to Basil Bartending API"}
+@app.get("/api")
+def root_check():
+    return {"message": "Backend is alive!"}
 
 # Reservation endpoint'ini dahil ediyoruz
 app.include_router(reservation.router, prefix="/api")

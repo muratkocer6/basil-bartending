@@ -1,4 +1,5 @@
 pipeline {
+HEAD
 
 HEAD
   agent any
@@ -16,13 +17,49 @@ HEAD
       steps {
         git branch: 'main', url: 'https://github.com/muratkocer6/basilbartending.git'
       }
-    }
 
-    stage('Build Docker Image') {
-      steps {
-        sh 'docker build -t $ECR_REPO:$IMAGE_TAG ./backend'
-      }
+    agent any
+    environment {
+        AWS_REGION = "us-east-1"
+        ECR_REPO = "182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend"
+        FRONTEND_BUCKET = "basil-backend-frontend"
+        CLOUDFRONT_DIST_ID = "E33QXGF5XGNKB9"
+        5e48868 (Saving local changes before rebase)
     }
+    stages {
+        stage('Build Backend') {
+            steps {
+                sh 'docker build -t $ECR_REPO:latest ./backend'
+            }
+        }
+        stage('Push to ECR') {
+            steps {
+                sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO'
+                sh 'docker push $ECR_REPO:latest'
+            }
+        }
+        stage('Deploy to ECS') {
+            steps {
+                sh 'aws ecs update-service --cluster basil-backend-cluster --service basil-backend-service --force-new-deployment'
+            }
+        }
+        stage('Sync Frontend') {
+            steps {
+                sh 'aws s3 sync ./frontend s3://$FRONTEND_BUCKET --delete'
+            }
+        }
+        stage('Invalidate Cache') {
+            steps {
+                sh 'aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths "/*"'
+            }
+        }
+        stage('Health Check') {
+            steps {
+                sh './healthcheck.sh'
+            }
+        }
+    }
+       HEAD
 
     stage('Login to ECR') {
       steps {
@@ -109,5 +146,6 @@ HEAD
     }
   }
  da52db3 (Update Jenkinsfile)
+         5e48868 (Saving local changes before rebase)
 }
 

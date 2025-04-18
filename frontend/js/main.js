@@ -11,7 +11,11 @@
       message: form.message.value
     };
 
-    const res = await fetch("http://localhost:8000/api/reservation", {
+    const BASE_URL = window.location.hostname.includes('localhost')
+      ? 'http://localhost:8000'
+      : 'https://api.basilbartending.com';
+
+    const res = await fetch(`${BASE_URL}/api/reservation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

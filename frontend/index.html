@@ -7,38 +7,39 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body class="bg-gray-100 text-gray-900">
-
+<body class="bg-gray-50 text-gray-800 font-sans">
   <!-- Navbar -->
-  <nav class="bg-white shadow fixed top-0 w-full z-10">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-yellow-600">Basil Bartending</h1>
-      <ul class="flex space-x-6">
-        <li><a href="index.html" class="hover:text-yellow-600">Home</a></li>
-        <li><a href="about.html" class="hover:text-yellow-600">About</a></li>
-        <li><a href="services.html" class="hover:text-yellow-600">Services</a></li>
-        <li><a href="gallery.html" class="hover:text-yellow-600">Gallery</a></li>
-        <li><a href="faq.html" class="hover:text-yellow-600">FAQ</a></li>
-        <li><a href="contact.html" class="hover:text-yellow-600">Contact</a></li>
-        <li><a href="reservation.html" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Book Us</a></li>
+  <nav class="bg-white shadow-lg fixed top-0 w-full z-10">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold text-yellow-600 tracking-tight">Basil Bartending</h1>
+      <ul class="flex space-x-8 items-center">
+        <li><a href="index.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Home</a></li>
+        <li><a href="about.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">About</a></li>
+        <li><a href="services.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Services</a></li>
+        <li><a href="gallery.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Gallery</a></li>
+        <li><a href="faq.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">FAQ</a></li>
+        <li><a href="contact.html" class="text-gray-700 hover:text-yellow-600 font-medium transition-colors">Contact</a></li>
+        <li><a href="reservation.html" class="bg-yellow-500 text-white px-5 py-2 rounded-full hover:bg-yellow-600 font-semibold transition-all hover:shadow-md">Book Us</a></li>
       </ul>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="pt-24 text-center px-4">
-    <img src="assets/bar.jpg" class="mx-auto rounded shadow mb-6" alt="Bar" />
-    <h2 class="text-4xl font-bold mb-4">Welcome to Basil Bartending</h2>
-    <p class="text-lg mb-6">Premium mobile bartending services for events across the DMV area.</p>
-    <a href="reservation.html" class="bg-yellow-500 text-white px-6 py-3 rounded hover:bg-yellow-600">Get a Quote</a>
+  <section class="pt-32 pb-20 bg-gradient-to-b from-gray-50 to-gray-100 text-center px-6">
+    <div class="container mx-auto">
+      <img src="assets/bar.jpg" class="mx-auto rounded-xl shadow-lg mb-8 max-w-full h-96 object-cover animate-fade-in" alt="Bar" />
+      <h2 class="text-5xl font-bold mb-4 text-gray-900 tracking-tight animate-fade-in">Welcome to Basil Bartending</h2>
+      <p class="text-xl mb-8 text-gray-600 max-w-2xl mx-auto animate-fade-in">Premium mobile bartending services for events across the DMV area.</p>
+      <a href="reservation.html" class="bg-yellow-500 text-white px-8 py-4 rounded-full hover:bg-yellow-600 font-semibold text-lg transition-all hover:shadow-md animate-fade-in">Get a Quote</a>
+    </div>
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-6 mt-20">
+  <footer class="bg-gray-900 text-white py-8 mt-20">
     <div class="container mx-auto text-center text-sm">
-      &copy; 2025 Basil Bartending | All rights reserved
+      <p>© 2025 Basil Bartending | All rights reserved</p>
+      <p class="mt-2 text-gray-400">Crafting memorable experiences, one cocktail at a time.</p>
     </div>
   </footer>
-
 </body>
 </html>

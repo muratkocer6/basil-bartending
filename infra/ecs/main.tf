@@ -1,3 +1,4 @@
+# VPC
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -8,6 +9,7 @@ resource "aws_vpc" "main" {
   }
 }
 
+# Subnets
 resource "aws_subnet" "public_1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.11.0/24"
@@ -30,6 +32,7 @@ resource "aws_subnet" "public_2" {
   }
 }
 
+# Internet Gateway and Routing
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
@@ -61,10 +64,12 @@ resource "aws_route_table_association" "public_2" {
   route_table_id = aws_route_table.public.id
 }
 
+# ECS Cluster
 resource "aws_ecs_cluster" "main" {
   name = "${var.project_name}-cluster"
 }
 
+# ECS Task Execution Role
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "${var.project_name}-task-exec-role"
 
@@ -89,8 +94,9 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_ecs_task_definition" "app" {
-  family                   = "${var.project_name}-task"
+# ECS Task Definition
+resource "aws_ecs_task_definition" "basil_backend" {
+  family                   = "basil-backend-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
@@ -104,14 +110,38 @@ resource "aws_ecs_task_definition" "app" {
       essential = true
       portMappings = [
         {
-          containerPort = var.container_port
+          containerPort = 8000
           protocol      = "tcp"
         }
       ]
+      environment = [
+        { name = "EMAIL_USER", value = "muratkocer6@gmail.com" },
+        { name = "EMAIL_PASS", value = "kgcdvqagzziwcyzc" },
+        { name = "EMAIL_TO", value = "muratkocer6@gmail.com" },
+        { name = "EMAIL_HOST", value = "smtp.gmail.com" },
+        { name = "EMAIL_PORT", value = "587" }
+      ]
+      command = [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/basil-backend"
+          awslogs-region        = "us-east-1"
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     }
   ])
 }
-# Security group for ECS tasks and load balancer
+
+# Security Group
 resource "aws_security_group" "basil_sg" {
   name        = "${var.project_name}-sg"
   description = "Allow HTTP traffic"
@@ -150,12 +180,12 @@ resource "aws_lb" "app_lb" {
   }
 }
 
-# Target group
+# Target Group
 resource "aws_lb_target_group" "app_tg" {
-  name     = "${var.project_name}-tg"
-  port     = var.container_port
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  name        = "${var.project_name}-tg"
+  port        = var.container_port
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.main.id
   target_type = "ip"
 }
 
@@ -176,7 +206,7 @@ resource "aws_ecs_service" "app_service" {
   name            = "${var.project_name}-service"
   cluster         = aws_ecs_cluster.main.id
   launch_type     = "FARGATE"
-  task_definition = aws_ecs_task_definition.app.arn
+  task_definition = aws_ecs_task_definition.basil_backend.arn
   desired_count   = 1
 
   network_configuration {
@@ -194,9 +224,10 @@ resource "aws_ecs_service" "app_service" {
   depends_on = [aws_lb_listener.app_listener]
 }
 
+# S3 Static Website
 resource "aws_s3_bucket" "frontend" {
-  bucket = "${var.project_name}-frontend"
-  force_destroy = true
+  bucket         = "${var.project_name}-frontend"
+  force_destroy  = true
 
   tags = {
     Name = "${var.project_name}-frontend"
@@ -231,11 +262,26 @@ resource "aws_s3_bucket_policy" "frontend_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
+        Effect    = "Allow"
         Principal = "*"
-        Action = ["s3:GetObject"]
-        Resource = "${aws_s3_bucket.frontend.arn}/*"
+        Action    = ["s3:GetObject"]
+        Resource  = "${aws_s3_bucket.frontend.arn}/*"
       }
     ]
   })
 }
+
+resource "aws_cloudwatch_log_group" "ecs_backend" {
+  name              = "/ecs/basil-backend"
+  retention_in_days = 7
+
+  tags = {
+    Name = "basil-backend-log-group"
+  }
+}
+
+# Output
+output "alb_dns_name" {
+  value = aws_lb.app_lb.dns_name
+}
+
