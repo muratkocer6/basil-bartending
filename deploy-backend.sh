@@ -8,7 +8,7 @@ ECR_IMAGE="182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend:$IMAGE_TAG
 
 # Update the ECS service with the new image (customize cluster/service names if needed)
 aws ecs update-service \
-  --cluster basil-cluster \
+  --cluster basil-backend-cluster \
   --service basil-backend-service \
   --force-new-deployment \
   --region us-east-1
