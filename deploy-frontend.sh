@@ -7,7 +7,7 @@ aws s3 sync ./frontend s3://basil-backend-frontend --delete
 
 echo "🚀 Invalidating CloudFront distribution cache..."
 aws cloudfront create-invalidation \
-  --distribution-id YOUR_CLOUDFRONT_DIST_ID \
+  --distribution-id E33QXGF5XGNKB9 \
   --paths "/*"
 
 echo "✅ Frontend deployed and cache invalidated."
