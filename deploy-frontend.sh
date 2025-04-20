@@ -1,23 +1,13 @@
 #!/bin/bash
 
-# --- CONFIGURATION ---
-S3_BUCKET="basil-backend-frontend"
-CLOUDFRONT_DISTRIBUTION_ID="E33QXGF5XGNKB9"
-FRONTEND_DIR="./frontend"
+set -e  # exit on any error
 
-# --- DEPLOY ---
-echo "🔄 Syncing $FRONTEND_DIR to S3 bucket s3://$S3_BUCKET ..."
-aws s3 sync "$FRONTEND_DIR" "s3://$S3_BUCKET" --delete
+echo "🔄 Syncing ./frontend to S3 bucket s3://basil-backend-frontend ..."
+aws s3 sync ./frontend s3://basil-backend-frontend --delete
 
 echo "🚀 Invalidating CloudFront distribution cache..."
 aws cloudfront create-invalidation \
-  --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+  --distribution-id YOUR_CLOUDFRONT_DIST_ID \
   --paths "/*"
 
-stage('Deploy Frontend') {
-  steps {
-    sh './deploy-frontend.sh'
-  }
-}
-
-echo "✅ Deployment complete!"
+echo "✅ Frontend deployed and cache invalidated."
