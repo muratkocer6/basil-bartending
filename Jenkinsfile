@@ -37,13 +37,27 @@ pipeline {
 
     stage('Deploy to ECS') {
       steps {
-        sh "./deploy-backend.sh $IMAGE_TAG"
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws-ecr-creds',
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh './deploy-backend.sh $IMAGE_TAG'
+        }
       }
     }
 
     stage('Upload Frontend and Invalidate Cache') {
       steps {
-        sh "./deploy-frontend.sh"
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws-ecr-creds',
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh './deploy-frontend.sh'
+        }
       }
     }
 
