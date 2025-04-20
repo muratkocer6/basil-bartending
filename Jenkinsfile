@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/muratkocer6/basil-bartending.git'
+                git branch: 'main', url:  'https://github.com/muratkocer6/basil-bartending.git'
             }
         }
 
