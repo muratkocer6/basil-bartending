@@ -1,30 +1,17 @@
 #!/bin/bash
 
-set -e
-
+# This script is triggered by Jenkins and receives the image tag as an argument
 IMAGE_TAG=$1
-CLUSTER_NAME="basil-cluster"
-SERVICE_NAME="basil-backend-service"
-CONTAINER_NAME="basil-backend"
-REPOSITORY_URI="182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend"
 
-echo "🛠 Updating ECS service with image: $REPOSITORY_URI:$IMAGE_TAG"
+# ECR image path (update if needed)
+ECR_IMAGE="182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend:$IMAGE_TAG"
 
-# Register new task definition with updated image
-TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $SERVICE_NAME)
-NEW_TASK_DEF=$(echo $TASK_DEFINITION | jq --arg IMAGE "$REPOSITORY_URI:$IMAGE_TAG" \
-  '.taskDefinition | .containerDefinitions[0].image = $IMAGE | {family: .family, containerDefinitions: [.containerDefinitions[0]]}')
-
-aws ecs register-task-definition \
-  --cli-input-json "$(echo $NEW_TASK_DEF)"
-
-# Get the new revision number
-NEW_REVISION=$(aws ecs describe-task-definition --task-definition $SERVICE_NAME | jq -r '.taskDefinition.revision')
-
-# Update ECS service to use the new task revision
+# Update the ECS service with the new image (customize cluster/service names if needed)
 aws ecs update-service \
-  --cluster $CLUSTER_NAME \
-  --service $SERVICE_NAME \
-  --task-definition "$SERVICE_NAME:$NEW_REVISION"
+  --cluster basil-cluster \
+  --service basil-backend-service \
+  --force-new-deployment \
+  --region us-east-1
 
-echo "✅ ECS service updated to image: $IMAGE_TAG"
+# Optional: log the image that was deployed
+echo "✅ ECS deployment triggered using image: $ECR_IMAGE"
