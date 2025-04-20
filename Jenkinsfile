@@ -24,7 +24,6 @@ HEAD
         ECR_REPO = "182399722085.dkr.ecr.us-east-1.amazonaws.com/basil-backend"
         FRONTEND_BUCKET = "basil-backend-frontend"
         CLOUDFRONT_DIST_ID = "E33QXGF5XGNKB9"
-        5e48868 (Saving local changes before rebase)
     }
     stages {
         stage('Build Backend') {
