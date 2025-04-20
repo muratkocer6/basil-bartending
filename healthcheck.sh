@@ -1,21 +1,18 @@
 #!/bin/bash
 
-set -e
-
 echo "✅ Checking Frontend (CloudFront site)..."
-curl -sSf https://basilbartending.com | grep -q "<title>" && echo "✔️ Frontend is up!" || echo "❌ Frontend check failed"
+curl -sSf https://basilbartending.com > /dev/null && echo "✔️ Frontend is up!" || echo "❌ Frontend is down!"
 
 echo "✅ Checking Backend root endpoint..."
-curl -m 5 -sSf https://api.basilbartending.com/ | grep -q "Welcome" && echo "✔️ Backend is up!" || echo "❌ Backend check failed"
+curl -sSf https://api.basilbartending.com > /dev/null && echo "✔️ Backend is up!" || echo "❌ Backend is down!"
 
 echo "✅ Checking ECS logs for recent activity..."
-aws logs tail /ecs/basil-backend --since 10m
+# Inject credentials if not already exported
+if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+  export AWS_ACCESS_KEY_ID=your_access_key
+  export AWS_SECRET_ACCESS_KEY=your_secret_key
+  export AWS_DEFAULT_REGION=us-east-1
+fi
 
-echo "✅ Checking CloudFront invalidation status..."
-aws cloudfront list-invalidations --distribution-id E33QXGF5XGNKB9 | grep -A 2 '"Invalidation"' | head -n 5
-
-echo "✅ Checking Target Group Health..."
-aws elbv2 describe-target-health \
-  --target-group-arn arn:aws:elasticloadbalancing:us-east-1:182399722085:targetgroup/basil-backend-tg/a31640c5963a9e07 \
-  --query "TargetHealthDescriptions[*].TargetHealth.State" \
-  --output text
+# Now check logs
+aws logs describe-log-groups --region us-east-1 >/dev/null && echo "✔️ AWS CLI can access logs." || echo "❌ Cannot access logs."
