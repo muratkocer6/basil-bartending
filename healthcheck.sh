@@ -1,18 +1,17 @@
 #!/bin/bash
 
 echo "✅ Checking Frontend (CloudFront site)..."
-curl -sSf https://basilbartending.com > /dev/null && echo "✔️ Frontend is up!" || echo "❌ Frontend is down!"
+curl -sf https://basilbartending.com && echo "✔️ Frontend is up!" || echo "❌ Frontend is down!"
 
 echo "✅ Checking Backend root endpoint..."
-curl -sSf https://api.basilbartending.com > /dev/null && echo "✔️ Backend is up!" || echo "❌ Backend is down!"
+curl -sf https://api.basilbartending.com && echo "✔️ Backend is up!" || echo "❌ Backend is down!"
 
 echo "✅ Checking ECS logs for recent activity..."
-# Inject credentials if not already exported
-if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-  export AWS_ACCESS_KEY_ID=your_access_key
-  export AWS_SECRET_ACCESS_KEY=your_secret_key
-  export AWS_DEFAULT_REGION=us-east-1
-fi
 
-# Now check logs
-aws logs describe-log-groups --region us-east-1 >/dev/null && echo "✔️ AWS CLI can access logs." || echo "❌ Cannot access logs."
+# Set up AWS CLI config for the script context
+aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+aws configure set default.region us-east-1
+
+# Attempt to list logs
+aws logs describe-log-groups --limit 1 && echo "✔️ Log access succeeded" || echo "❌ Log access failed"
