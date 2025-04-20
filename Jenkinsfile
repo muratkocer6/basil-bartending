@@ -22,7 +22,11 @@ pipeline {
 
         stage('Login to ECR') {
             steps {
-                sh "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO"
+                withCredentials([usernamePassword(credentialsId: 'aws-ecr-creds', usernameVariable: 'AWS_USER', passwordVariable: 'AWS_TOKEN')]) {
+                   sh '''
+                   echo "$AWS_TOKEN" | docker login --username "$AWS_USER" --password-stdin 182399722085.dkr.ecr.us-east-1.amazonaws.com
+                   '''
+                }
             }
         }
 
