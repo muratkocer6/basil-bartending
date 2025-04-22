@@ -58,7 +58,6 @@ pipeline {
 }
 
 stage('Notify New Relic') {
-  steps {
     script {
       node {
         withCredentials([string(credentialsId: 'newrelic-api-key', variable: 'NEW_RELIC_API_KEY')]) {
@@ -79,5 +78,4 @@ stage('Notify New Relic') {
         }
       }
     }
-  }
 }
