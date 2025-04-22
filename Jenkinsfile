@@ -56,21 +56,28 @@ pipeline {
     }
   }
 }
+
 stage('Notify New Relic') {
-  withCredentials([string(credentialsId: 'newrelic-api-key', variable: 'NEW_RELIC_API_KEY')]) {
-    sh '''
-      echo 📡 Notifying New Relic Deployment API...
-      curl -X POST https://api.newrelic.com/v2/applications/${NEW_RELIC_APP_ID}/deployments.json \
-      -H "X-Api-Key:${NEW_RELIC_API_KEY}" \
-      -H "Content-Type: application/json" \
-      -d '{
-            "deployment": {
-              "revision": "'${GIT_COMMIT}'",
-              "changelog": "Automated deployment via Jenkins",
-              "description": "Backend deployed to ECS",
-              "user": "Jenkins"
-            }
-          }'
-    '''
+  steps {
+    script {
+      node {
+        withCredentials([string(credentialsId: 'newrelic-api-key', variable: 'NEW_RELIC_API_KEY')]) {
+          sh '''
+            echo 📡 Notifying New Relic Deployment API...
+            curl -X POST https://api.newrelic.com/v2/applications/${NEW_RELIC_APP_ID}/deployments.json \
+            -H "X-Api-Key:${NEW_RELIC_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{
+                  "deployment": {
+                    "revision": "'${GIT_COMMIT}'",
+                    "changelog": "Automated deployment via Jenkins",
+                    "description": "Backend deployed to ECS",
+                    "user": "Jenkins"
+                  }
+                }'
+          '''
+        }
+      }
+    }
   }
 }
