@@ -56,3 +56,21 @@ pipeline {
     }
   }
 }
+stage('Notify New Relic') {
+  steps {
+    withCredentials([string(credentialsId: 'newrelic-api-key', variable: 'NEW_RELIC_API_KEY')]) {
+      sh '''
+        curl -X POST https://api.newrelic.com/v2/applications/NTk5MDE2NXxBUE18QVBQTElDQVRJT058MTQ3Mzc4MDUxOQ/deployments.json \
+          -H "Api-Key:$NEW_RELIC_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+                "deployment": {
+                  "revision": "backend-${BUILD_NUMBER}",
+                  "description": "Automated deployment from Jenkins",
+                  "user": "jenkins"
+                }
+              }'
+      '''
+    }
+  }
+}
